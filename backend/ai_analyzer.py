@@ -7,7 +7,7 @@ import pandas as pd
 from openai import OpenAI
 
 # Initialize OpenAI client
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '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')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Standard business column mapping
