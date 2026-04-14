@@ -27,10 +27,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy Python dependencies from builder
 COPY --from=builder /root/.local /root/.local
 
-# Set PATH
+# Set PATH - CRITICAL for Gunicorn
 ENV PATH=/root/.local/bin:$PATH
 ENV PYTHONUNBUFFERED=1
 ENV FLASK_ENV=production
+ENV PYTHONPATH=/app
 
 # Copy application
 COPY backend/ ./backend/
@@ -43,4 +44,5 @@ EXPOSE 10000
 WORKDIR /app/backend
 
 # Run Flask app with Gunicorn on port 10000
-CMD ["gunicorn", "--bind", "0.0.0.0:10000", "--workers", "4", "--timeout", "120", "app:app"]
+# Use full path to ensure gunicorn is found
+CMD ["/root/.local/bin/gunicorn", "--bind", "0.0.0.0:10000", "--workers", "4", "--timeout", "120", "app:app"]

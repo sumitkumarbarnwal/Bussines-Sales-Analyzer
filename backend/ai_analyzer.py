@@ -6,9 +6,19 @@ import json
 import pandas as pd
 from openai import OpenAI
 
-# Initialize OpenAI client
+# Lazy initialize OpenAI client (only when needed)
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-client = OpenAI(api_key=OPENAI_API_KEY)
+client = None
+
+def get_client():
+    """Get or create OpenAI client lazily"""
+    global client
+    if client is None and OPENAI_API_KEY:
+        try:
+            client = OpenAI(api_key=OPENAI_API_KEY)
+        except Exception as e:
+            print(f"Warning: Failed to initialize OpenAI client: {e}")
+    return client
 
 # Standard business column mapping
 EXPECTED_COLUMNS = {
@@ -188,7 +198,12 @@ Respond with ONLY valid JSON (no markdown, no extra text):
 """
     
     try:
-        response = client.chat.completions.create(
+        openai_client = get_client()
+        if not openai_client:
+            print("OpenAI API key not configured, using fallback...")
+            return smart_column_mapping(df)
+        
+        response = openai_client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {
