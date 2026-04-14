@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales & Profit Analyzer — AI-Powered Business Intelligence</title>
+    <meta name="description" content="Transform your business data into actionable insights with AI-powered analytics, forecasting, and profit intelligence">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        /* ═══════════════════════════════════════════
+           NAVBAR
+           ═══════════════════════════════════════════ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(100, 200, 255, 0.1);
+            padding: 1rem 2rem;
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: #38ef7d;
+            font-weight: 700;
+            font-size: 1.3rem;
+            transition: opacity 0.3s;
+        }
+
+        .navbar-brand:hover {
+            opacity: 0.8;
+        }
+
+        .navbar-brand svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .navbar-center {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .navbar-link {
+            color: #999;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .navbar-link:hover {
+            color: #d0d0d0;
+        }
+
+        .navbar-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-login, .btn-register {
+            padding: 0.65rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-login {
+            color: #aaa;
+            background: transparent;
+            border: 1px solid #444;
+        }
+
+        .btn-login:hover {
+            border-color: #999;
+            color: #ddd;
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+            color: #0f1419;
+            border: none;
+            font-weight: 700;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(56, 239, 125, 0.25);
+        }
+
+        /* ═══════════════════════════════════════════
+           HERO SECTION
+           ═══════════════════════════════════════════ */
+        .hero {
+            padding: 150px 2rem 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(56, 239, 125, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(30px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #38ef7d 0%, #4facfe 50%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.15;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #999;
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        /* ═══════════════════════════════════════════
+           FEATURES SECTION
+           ═══════════════════════════════════════════ */
+        .features {
+            padding: 100px 2rem;
+            background: rgba(30, 40, 60, 0.5);
+            margin: 50px 0;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 3rem;
+            color: #e0e0e0;
+            letter-spacing: -0.5px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(56, 239, 125, 0.05) 100%);
+            border: 1px solid rgba(56, 239, 125, 0.2);
+            padding: 2.5rem;
+            border-radius: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(56, 239, 125, 0.5);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.12) 0%, rgba(56, 239, 125, 0.08) 100%);
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(56, 239, 125, 0.08);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-icon svg {
+            width: 26px;
+            height: 26px;
+            color: #0f1419;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: #e0e0e0;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: #999;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* ═══════════════════════════════════════════
+           BENEFITS SECTION
+           ═══════════════════════════════════════════ */
+        .benefits {
+            padding: 100px 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefit-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 4rem;
+            margin-bottom: 5rem;
+        }
+
+        .benefit-row:nth-child(even) {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .benefit-row:nth-child(even) .benefit-content {
+            order: 2;
+        }
+
+        .benefit-row:nth-child(even) .benefit-visual {
+            order: 1;
+        }
+
+        .benefit-visual {
+            background: linear-gradient(135deg, rgba(56, 239, 125, 0.08) 0%, rgba(102, 126, 234, 0.08) 100%);
+            border: 1px solid rgba(56, 239, 125, 0.15);
+            padding: 2rem;
+            border-radius: 8px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .benefit-content h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1.25rem;
+            color: #e0e0e0;
+            font-weight: 700;
+        }
+
+        .benefit-content p {
+            color: #999;
+            line-height: 1.8;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .benefit-list {
+            list-style: none;
+            color: #999;
+        }
+
+        .benefit-list li {
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .benefit-list li::before {
+            content: '✓';
+            color: #38ef7d;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* ═══════════════════════════════════════════
+           CTA SECTION
+           ═══════════════════════════════════════════ */
+        .cta-section {
+            padding: 60px 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(56, 239, 125, 0.06) 0%, rgba(102, 126, 234, 0.06) 100%);
+            border-top: 1px solid rgba(56, 239, 125, 0.15);
+            border-bottom: 1px solid rgba(56, 239, 125, 0.15);
+            margin: 50px 0;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #e0e0e0;
+            font-weight: 700;
+        }
+
+        .cta-section p {
+            color: #999;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ═══════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════ */
+        .footer {
+            background: rgba(15, 20, 25, 0.8);
+            border-top: 1px solid rgba(100, 200, 255, 0.1);
+            padding: 2rem;
+            text-align: center;
+            color: #888;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h4 {
+            color: #e0e0e0;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-column a {
+            color: #888;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .footer-column a:hover {
+            color: #bbb;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(100, 200, 255, 0.1);
+            padding-top: 2rem;
+            color: #666;
+        }
+
+        /* ═══════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .navbar-center {
+                display: none;
+            }
+
+            .benefit-row {
+                grid-template-columns: 1fr;
+            }
+
+            .benefit-row:nth-child(even) {
+                grid-template-columns: 1fr;
+            }
+
+            .benefit-row:nth-child(even) .benefit-content,
+            .benefit-row:nth-child(even) .benefit-visual {
+                order: initial;
+            }
+
+            .hero {
+                padding: 120px 1.5rem 80px;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                <svg viewBox="0 0 32 32" fill="none"><rect x="2" y="18" width="6" height="12" rx="1.5" fill="url(#sg1)"/><rect x="10" y="12" width="6" height="18" rx="1.5" fill="url(#sg2)"/><rect x="18" y="5" width="6" height="25" rx="1.5" fill="url(#sg3)"/><path d="M4 16L13 9L21 14L29 4" stroke="#38ef7d" stroke-width="2" stroke-linecap="round"/><defs><linearGradient id="sg1" x1="2" y1="18" x2="8" y2="30"><stop stop-color="#667eea"/><stop offset="1" stop-color="#764ba2"/></linearGradient><linearGradient id="sg2" x1="10" y1="12" x2="16" y2="30"><stop stop-color="#4facfe"/><stop offset="1" stop-color="#00f2fe"/></linearGradient><linearGradient id="sg3" x1="18" y1="5" x2="24" y2="30"><stop stop-color="#38ef7d"/><stop offset="1" stop-color="#11998e"/></linearGradient></defs></svg>
+                Sales Analyzer
+            </a>
+            <div class="navbar-center">
+                <a href="#features" class="navbar-link">Features</a>
+                <a href="#benefits" class="navbar-link">How It Works</a>
+                <a href="#" class="navbar-link">About</a>
+            </div>
+            <div class="navbar-actions">
+                <a href="/auth" class="btn-login">Sign In</a>
+                <a href="/auth" class="btn-register">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Transform Your Business Data Into Actionable Insights</h1>
+            <p>AI-powered analytics platform that helps you understand sales trends, maximize profits, and make data-driven decisions in seconds</p>
+            <div class="hero-cta">
+                <a href="/auth" class="btn-register" style="padding: 1rem 2.5rem; font-size: 1rem;">Start Free Trial</a>
+                <button class="btn-login" style="padding: 1rem 2.5rem; font-size: 1rem;">Watch Demo</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <h2 class="section-title">Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    </div>
+                    <h3>Real-Time Analytics</h3>
+                    <p>Visualize your sales performance with interactive dashboards and real-time KPI tracking</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/><path d="M12 5V1M12 23V19M4.22 4.22L1.81 1.81M20.39 20.39L22.8 22.8M1 12H5M19 12H23M4.22 19.78L1.81 22.19M20.39 3.61L22.8 1.2"/></svg>
+                    </div>
+                    <h3>AI-Powered Insights</h3>
+                    <p>Automatic column detection and data correction using advanced machine learning</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 17"/><polyline points="17 6 23 6 23 12"/></svg>
+                    </div>
+                    <h3>Sales Forecasting</h3>
+                    <p>Predict future sales trends with machine learning forecasts and trend analysis</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <h3>Profit Intelligence</h3>
+                    <p>Deep dive into profit margins, cost analysis, and revenue optimization opportunities</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <h3>Smart Clustering</h3>
+                    <p>Identify customer segments and sales patterns with intelligent clustering analysis</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <h3>Easy Data Import</h3>
+                    <p>Upload CSV or Excel files with automatic validation and smart column mapping</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits" id="benefits">
+        <h2 class="section-title">Why Choose Sales Analyzer</h2>
+
+        <div class="benefit-row">
+            <div class="benefit-visual">
+                <span style="font-size: 2rem; font-weight: 700; color: #38ef7d;">1</span>
+            </div>
+            <div class="benefit-content">
+                <h3>Smart Data Processing</h3>
+                <p>Our AI automatically detects your data structure and corrects common formatting issues. No manual column mapping needed.</p>
+                <ul class="benefit-list">
+                    <li>Automatic column detection</li>
+                    <li>Intelligent data validation</li>
+                    <li>Auto-calculated metrics</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="benefit-row">
+            <div class="benefit-visual">
+                <span style="font-size: 2rem; font-weight: 700; color: #38ef7d;">2</span>
+            </div>
+            <div class="benefit-content">
+                <h3>Instant Insights</h3>
+                <p>Get comprehensive analysis in seconds. See your KPIs, trends, and profit margins across all your data.</p>
+                <ul class="benefit-list">
+                    <li>Real-time KPI calculation</li>
+                    <li>Interactive visualizations</li>
+                    <li>Historical comparisons</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="benefit-row">
+            <div class="benefit-visual">
+                <span style="font-size: 2rem; font-weight: 700; color: #38ef7d;">3</span>
+            </div>
+            <div class="benefit-content">
+                <h3>Advanced Analytics</h3>
+                <p>Go beyond basic reporting with machine learning models, trend decomposition, and outlier detection.</p>
+                <ul class="benefit-list">
+                    <li>AI forecasting models</li>
+                    <li>Anomaly detection</li>
+                    <li>Trend decomposition</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="benefit-row">
+            <div class="benefit-visual">
+                <span style="font-size: 2rem; font-weight: 700; color: #38ef7d;">4</span>
+            </div>
+            <div class="benefit-content">
+                <h3>Your Data, Secured</h3>
+                <p>Your business data stays private and secure. All processing happens on your server with secure authentication.</p>
+                <ul class="benefit-list">
+                    <li>Secure login system</li>
+                    <li>Private data storage</li>
+                    <li>No third-party sharing</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Ready to Unlock Your Business Potential?</h2>
+        <p>Start analyzing your sales data with AI-powered insights today</p>
+        <a href="/auth" class="btn-register" style="padding: 1rem 2.5rem; font-size: 1rem; display: inline-block;">Create Account Now</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Product</h4>
+                <a href="#features">Features</a>
+                <a href="#benefits">How It Works</a>
+                <a href="#">Pricing</a>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <a href="#">About Us</a>
+                <a href="#">Blog</a>
+                <a href="#">Careers</a>
+            </div>
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Sales & Profit Analyzer. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

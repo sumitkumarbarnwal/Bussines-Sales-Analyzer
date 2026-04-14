@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales & Profit Analyzer — Login</title>
+    <meta name="description" content="Powerful sales analytics and profit intelligence platform with AI-driven insights">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body class="login-body">
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="orb orb-4"></div>
+    </div>
+
+    <!-- Floating particles -->
+    <div class="particles" id="particles"></div>
+
+    <div class="login-wrapper">
+        <div class="login-card">
+            <!-- Logo / Brand -->
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="28" width="8" height="16" rx="2" fill="url(#g1)"/>
+                        <rect x="16" y="18" width="8" height="26" rx="2" fill="url(#g2)"/>
+                        <rect x="28" y="8" width="8" height="36" rx="2" fill="url(#g3)"/>
+                        <path d="M6 26L20 14L32 20L44 6" stroke="url(#g4)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="44" cy="6" r="3" fill="#38ef7d"/>
+                        <defs>
+                            <linearGradient id="g1" x1="4" y1="28" x2="12" y2="44"><stop stop-color="#667eea"/><stop offset="1" stop-color="#764ba2"/></linearGradient>
+                            <linearGradient id="g2" x1="16" y1="18" x2="24" y2="44"><stop stop-color="#4facfe"/><stop offset="1" stop-color="#00f2fe"/></linearGradient>
+                            <linearGradient id="g3" x1="28" y1="8" x2="36" y2="44"><stop stop-color="#38ef7d"/><stop offset="1" stop-color="#11998e"/></linearGradient>
+                            <linearGradient id="g4" x1="6" y1="26" x2="44" y2="6"><stop stop-color="#f093fb"/><stop offset="1" stop-color="#38ef7d"/></linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h1 class="brand-title">Sales & Profit Analyzer</h1>
+                <p class="brand-subtitle">AI-Powered Business Intelligence</p>
+            </div>
+
+            <!-- Tab Switches -->
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="login" id="tab-login">Sign In</button>
+                <button class="tab-btn" data-tab="register" id="tab-register">Create Account</button>
+                <div class="tab-indicator" id="tab-indicator"></div>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form active" id="login-form">
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <input type="text" id="login-username" placeholder="Username" required autocomplete="username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <input type="password" id="login-password" placeholder="Password" required autocomplete="current-password">
+                        <button type="button" class="toggle-password" data-target="login-password">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" id="login-btn">
+                    <span class="btn-text">Sign In</span>
+                    <div class="btn-loader hidden"></div>
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form class="auth-form" id="register-form">
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <input type="text" id="reg-username" placeholder="Username" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            <input type="password" id="reg-password" placeholder="Password" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            <input type="password" id="reg-confirm" placeholder="Confirm Password" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        <input type="email" id="reg-email" placeholder="Email (optional)">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        <input type="text" id="reg-business" placeholder="Business Name (optional)">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" id="register-btn">
+                    <span class="btn-text">Create Account</span>
+                    <div class="btn-loader hidden"></div>
+                </button>
+            </form>
+
+            <!-- Toast -->
+            <div class="toast" id="toast"></div>
+        </div>
+
+        <p class="footer-text">&copy; 2025 Sales & Profit Analyzer. All rights reserved.</p>
+    </div>
+
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/auth.js"></script>
+</body>
+</html>

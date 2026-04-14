@@ -1,0 +1,356 @@
+/* ═══════════════════════════════════════════
+   LOGIN PAGE STYLES
+   ═══════════════════════════════════════════ */
+
+.login-body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── Animated Background Orbs ── */
+.bg-animation {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    animation: orbFloat 20s ease-in-out infinite;
+}
+
+.orb-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, #667eea, transparent 70%);
+    top: -15%; left: -10%;
+    animation-duration: 18s;
+}
+.orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #764ba2, transparent 70%);
+    bottom: -10%; right: -5%;
+    animation-duration: 22s;
+    animation-delay: -5s;
+}
+.orb-3 {
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, #4facfe, transparent 70%);
+    top: 40%; left: 50%;
+    animation-duration: 25s;
+    animation-delay: -10s;
+}
+.orb-4 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, #38ef7d, transparent 70%);
+    top: 60%; right: 30%;
+    animation-duration: 20s;
+    animation-delay: -8s;
+    opacity: 0.3;
+}
+
+@keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(50px, -60px) scale(1.1); }
+    50% { transform: translate(-30px, 40px) scale(0.95); }
+    75% { transform: translate(40px, 30px) scale(1.05); }
+}
+
+/* ── Particles ── */
+.particles {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: rgba(102, 126, 234, 0.5);
+    border-radius: 50%;
+    animation: particleFloat 15s linear infinite;
+}
+
+@keyframes particleFloat {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* ── Wrapper ── */
+.login-wrapper {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 460px;
+    padding: 1.5rem;
+}
+
+/* ── Card ── */
+.login-card {
+    background: rgba(15, 15, 42, 0.75);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem 2rem;
+    box-shadow:
+        0 24px 64px rgba(0, 0, 0, 0.4),
+        0 8px 24px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--grad-purple);
+}
+
+/* ── Brand ── */
+.brand {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.brand-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    animation: brandPulse 3s ease-in-out infinite;
+}
+
+@keyframes brandPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.brand-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: var(--grad-purple);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.25rem;
+}
+
+.brand-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* ── Auth Tabs ── */
+.auth-tabs {
+    display: flex;
+    position: relative;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: var(--radius-md);
+    padding: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.auth-tabs .tab-btn {
+    flex: 1;
+    padding: 0.6rem;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.auth-tabs .tab-btn.active {
+    color: white;
+}
+
+.tab-indicator {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    height: calc(100% - 8px);
+    background: var(--grad-purple);
+    border-radius: var(--radius-sm);
+    transition: transform 0.35s var(--ease-spring);
+}
+
+.tab-indicator.right {
+    transform: translateX(100%);
+}
+
+/* ── Form ── */
+.auth-form {
+    display: none;
+}
+.auth-form.active {
+    display: block;
+    animation: fadeIn 0.35s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 0.85rem;
+    width: 18px;
+    height: 18px;
+    color: var(--text-muted);
+    pointer-events: none;
+    transition: color 0.3s ease;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-wrapper input:focus {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.input-wrapper input:focus ~ .input-icon,
+.input-wrapper:focus-within .input-icon {
+    color: var(--purple);
+}
+
+.input-wrapper input::placeholder {
+    color: var(--text-muted);
+}
+
+/* ── Toggle Password ── */
+.toggle-password {
+    position: absolute;
+    right: 0.8rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    color: var(--text-muted);
+    transition: color 0.2s;
+}
+.toggle-password:hover { color: var(--text-primary); }
+.toggle-password svg { width: 18px; height: 18px; }
+
+/* ── Submit Button ── */
+.login-card .btn-primary {
+    width: 100%;
+    padding: 0.85rem;
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--grad-purple);
+    color: white;
+    border: none;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s var(--ease-spring);
+}
+
+.login-card .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+}
+
+.login-card .btn-primary:active {
+    transform: translateY(0);
+}
+
+.form-hint {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+}
+
+/* ── Toast ── */
+.login-card .toast {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: white;
+    transform: translateX(120%);
+    transition: transform 0.4s var(--ease-spring);
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+}
+.login-card .toast.show {
+    transform: translateX(0);
+}
+.login-card .toast.success { background: linear-gradient(135deg, #11998e, #38ef7d); }
+.login-card .toast.error { background: linear-gradient(135deg, #f5576c, #f093fb); }
+
+/* ── Footer ── */
+.footer-text {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 1.5rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+    .login-wrapper { padding: 1rem; }
+    .login-card { padding: 2rem 1.25rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .brand-title { font-size: 1.25rem; }
+}

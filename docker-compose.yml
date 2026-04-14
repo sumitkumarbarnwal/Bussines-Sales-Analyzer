@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  sales-analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sales-analyzer
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_APP=app.py
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-me}
+    volumes:
+      - ./backend/data:/app/backend/data
+    restart: unless-stopped
+    networks:
+      - sales-network
+
+networks:
+  sales-network:
+    driver: bridge

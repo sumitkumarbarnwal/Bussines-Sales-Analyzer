@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  sales-analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: sales-analyzer-prod
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-change-me-to-secure-key}
+    volumes:
+      - ./backend/data:/app/backend/data
+      - sales-logs:/var/log/sales-analyzer
+    restart: always
+    networks:
+      - sales-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  sales-logs:
+
+networks:
+  sales-network:
+    driver: bridge
