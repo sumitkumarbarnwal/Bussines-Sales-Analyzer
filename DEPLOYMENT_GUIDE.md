@@ -17,7 +17,7 @@ This guide explains how to deploy the **Business Sales Analyzer** application gl
 
 1. **GitHub Repository** - Your code must be pushed to GitHub ✓ (Already done!)
 2. **Render Account** - Sign up at https://render.com
-3. **OpenAI API Key** - Get from https://platform.openai.com/api-keys (optional, but required for AI features)
+3. **Groq API Key** - Get from https://console.groq.com/keys (optional, but required for AI features)
 
 ---
 
@@ -42,7 +42,7 @@ Fill in the following details:
 
 | Field | Value |
 |-------|-------|
-| **Name** | `sales-analyzer` (or your preferred name) |
+| **Name** | `sales-analyzer-backend` |
 | **Environment** | `Docker` |
 | **Region** | Select closest to your location |
 | **Plan** | `Free` (or `Starter` for better performance) |
@@ -57,7 +57,7 @@ Fill in the following details:
 FLASK_ENV=production
 FLASK_APP=app.py
 SECRET_KEY=<generate-a-secure-random-key>
-OPENAI_API_KEY=<your-openai-api-key>
+GROQ_API_KEY=<your-groq-api-key>
 ```
 
 **How to generate SECRET_KEY:**
@@ -111,7 +111,7 @@ Now, every push to the `main` branch on GitHub will automatically redeploy your 
 
 **Solution:**
 - Check Render logs for errors
-- Verify `OPENAI_API_KEY` is set if using AI features
+- Verify `GROQ_API_KEY` is set if using AI features
 - Ensure SECRET_KEY is configured
 
 ### Issue: Need to See Logs

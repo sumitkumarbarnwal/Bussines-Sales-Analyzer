@@ -1,23 +1,23 @@
 """
-AI-Powered Column Detection & Data Correction using OpenAI GPT
+AI-Powered Column Detection & Data Correction using Groq API
 """
 import os
 import json
 import pandas as pd
-from openai import OpenAI
+from groq import Groq
 
-# Lazy initialize OpenAI client (only when needed)
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+# Lazy initialize Groq client (only when needed)
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 client = None
 
 def get_client():
-    """Get or create OpenAI client lazily"""
+    """Get or create Groq client lazily"""
     global client
-    if client is None and OPENAI_API_KEY:
+    if client is None and GROQ_API_KEY:
         try:
-            client = OpenAI(api_key=OPENAI_API_KEY)
+            client = Groq(api_key=GROQ_API_KEY)
         except Exception as e:
-            print(f"Warning: Failed to initialize OpenAI client: {e}")
+            print(f"Warning: Failed to initialize Groq client: {e}")
     return client
 
 # Standard business column mapping
@@ -198,13 +198,13 @@ Respond with ONLY valid JSON (no markdown, no extra text):
 """
     
     try:
-        openai_client = get_client()
-        if not openai_client:
-            print("OpenAI API key not configured, using fallback...")
+        groq_client = get_client()
+        if not groq_client:
+            print("Groq API key not configured, using fallback...")
             return smart_column_mapping(df)
         
-        response = openai_client.chat.completions.create(
-            model="gpt-4o-mini",
+        response = groq_client.chat.completions.create(
+            model="mixtral-8x7b-32768",
             messages=[
                 {
                     "role": "user",
