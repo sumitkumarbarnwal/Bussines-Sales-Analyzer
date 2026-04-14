@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: sales-analyzer
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: OPENAI_API_KEY
+        sync: false

@@ -30,16 +30,17 @@ COPY --from=builder /root/.local /root/.local
 # Set PATH
 ENV PATH=/root/.local/bin:$PATH
 ENV PYTHONUNBUFFERED=1
+ENV FLASK_ENV=production
 
 # Copy application
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/
 
 # Expose port
-EXPOSE 5000
+EXPOSE 10000
 
 # Set working directory for app
 WORKDIR /app/backend
 
-# Run Flask app
-CMD ["python", "app.py"]
+# Run Flask app with Gunicorn on port 10000
+CMD ["gunicorn", "--bind", "0.0.0.0:10000", "--workers", "4", "--timeout", "120", "app:app"]
