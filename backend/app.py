@@ -326,8 +326,15 @@ def api_upload():
                 print(f"Error processing row: {row_err}")
                 continue
         
+        # Insert data and verify it was saved
+        insert_success = False
         if rows_to_save:
-            db.insert_sales_rows(session['user_id'], rows_to_save)
+            insert_success = db.insert_sales_rows(session['user_id'], rows_to_save)
+            if not insert_success:
+                print(f"[WARNING] Failed to insert {len(rows_to_save)} rows for user {session['user_id']}")
+        
+        # Add upload history (even if insert failed, we log the attempt)
+        db.add_upload_history(session['user_id'], f.filename, len(rows_to_save), df.shape[1])
 
         # Build response
         memory_mb = round(df_corrected.memory_usage(deep=True).sum() / 1024**2, 2)
@@ -367,7 +374,9 @@ def api_upload():
         }
 
         return jsonify({
-            'message': 'File uploaded and saved successfully',
+            'message': 'File uploaded successfully' if rows_to_save and insert_success else 'File uploaded (check logs)',
+            'insert_status': 'success' if insert_success else 'failed' if rows_to_save else 'no_rows',
+            'rows_saved': len(rows_to_save) if insert_success else 0,
             'filename': f.filename,
             'rows': df.shape[0],
             'columns': df.shape[1],
@@ -382,7 +391,6 @@ def api_upload():
             'column_names': df_corrected.columns.tolist(),
             'original_columns': df.columns.tolist(),
             'ai_analysis': ai_info,
-            'rows_saved': len(rows_to_save),
         })
 
     except Exception as e:
@@ -501,6 +509,32 @@ def api_ai_correct():
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+# ─── Data Status API ────────────────────────
+
+@app.route('/api/data-status')
+@login_required
+def api_data_status():
+    """Check if user has uploaded data."""
+    try:
+        data = db.get_sales_data(session['user_id'], limit=1)
+        has_data = len(data) > 0
+        count = len(db.get_sales_data(session['user_id']))
+        
+        return jsonify({
+            'has_data': has_data,
+            'row_count': count,
+            'status': 'ready' if has_data else 'no_data',
+            'message': f'{count} rows uploaded' if has_data else 'Please upload data first'
+        })
+    except Exception as e:
+        return jsonify({
+            'has_data': False,
+            'row_count': 0,
+            'status': 'error',
+            'message': f'Error checking data: {str(e)}'
+        }), 500
 
 
 # ─── Sales Data API ─────────────────────────
@@ -672,7 +706,11 @@ def api_analytics():
 def api_profit_insights():
     data = db.get_sales_data(session['user_id'])
     if not data:
-        return jsonify({'error': 'No data'}), 404
+        return jsonify({
+            'error': 'No sales data found',
+            'message': 'Please upload your sales data file first to view profit insights',
+            'has_data': False
+        }), 404
 
     df = pd.DataFrame(data)
     df['profit'] = df['revenue'] - (df['cost_price'] * df['quantity'])
