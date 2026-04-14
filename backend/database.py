@@ -98,21 +98,23 @@ def init_database():
             )
         """)
 
-        # Seed default admin user if not exists
-        c.execute("SELECT id FROM users WHERE username='admin'")
-        if not c.fetchone():
+        # Seed default admin user if not exists - use INSERT OR IGNORE for concurrent workers
+        try:
             hashed = bcrypt.hashpw('admin123'.encode(), bcrypt.gensalt()).decode()
             c.execute(
-                "INSERT INTO users (username, password, email, role, business_name) VALUES (?,?,?,?,?)",
+                "INSERT OR IGNORE INTO users (username, password, email, role, business_name) VALUES (?,?,?,?,?)",
                 ('admin', hashed, 'admin@business.com', 'Owner', 'Admin Account')
             )
+        except Exception as e:
+            # If admin user already exists, that's fine - just log it
+            print(f"[INFO] Admin user already exists or error: {e}")
 
         conn.commit()
         conn.close()
         print("[OK] Database initialized successfully")
     except Exception as e:
         print(f"[ERROR] Database initialization error: {e}")
-        raise
+        # Don't raise - allow app to continue even if DB init fails
 
 
 def reset_sales_data(user_id=None):
@@ -270,29 +272,50 @@ def delete_user(user_id):
 # ──────────── SALES DATA ────────────
 
 def insert_sales_rows(user_id, rows):
-    """Insert multiple sales rows. `rows` is a list of dicts."""
-    conn = get_db()
-    for r in rows:
-        conn.execute("""
-            INSERT INTO sales_data
-                (user_id, transaction_date, product_name, category, quantity,
-                 unit_price, cost_price, revenue, profit, customer_name, region)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?)
-        """, (
-            user_id,
-            r.get('transaction_date', datetime.now().strftime('%Y-%m-%d')),
-            r.get('product_name', 'Unknown'),
-            r.get('category', 'General'),
-            r.get('quantity', 1),
-            r.get('unit_price', 0),
-            r.get('cost_price', 0),
-            r.get('revenue', 0),
-            r.get('profit', 0),
-            r.get('customer_name', ''),
-            r.get('region', ''),
-        ))
-    conn.commit()
-    conn.close()
+    """Insert multiple sales rows with error handling. `rows` is a list of dicts."""
+    try:
+        conn = get_db()
+        
+        # Verify user exists before inserting (prevent foreign key errors)
+        user_check = conn.execute("SELECT id FROM users WHERE id=?", (user_id,)).fetchone()
+        if not user_check:
+            print(f"[ERROR] User {user_id} not found - cannot insert sales data")
+            conn.close()
+            return False
+        
+        inserted_count = 0
+        for r in rows:
+            try:
+                conn.execute("""
+                    INSERT INTO sales_data
+                        (user_id, transaction_date, product_name, category, quantity,
+                         unit_price, cost_price, revenue, profit, customer_name, region)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?)
+                """, (
+                    user_id,
+                    r.get('transaction_date', datetime.now().strftime('%Y-%m-%d')),
+                    r.get('product_name', 'Unknown'),
+                    r.get('category', 'General'),
+                    r.get('quantity', 1),
+                    r.get('unit_price', 0),
+                    r.get('cost_price', 0),
+                    r.get('revenue', 0),
+                    r.get('profit', 0),
+                    r.get('customer_name', ''),
+                    r.get('region', ''),
+                ))
+                inserted_count += 1
+            except Exception as row_err:
+                print(f"[WARNING] Failed to insert row: {row_err}")
+                continue
+        
+        conn.commit()
+        conn.close()
+        print(f"[OK] Inserted {inserted_count}/{len(rows)} sales rows for user {user_id}")
+        return True
+    except Exception as e:
+        print(f"[ERROR] Failed to insert sales rows: {e}")
+        return False
 
 
 def get_sales_data(user_id, limit=10000):
@@ -431,13 +454,25 @@ def get_low_stock_products(user_id, threshold=10):
 # ──────────── UPLOAD HISTORY ────────────
 
 def add_upload_history(user_id, filename, rows, columns):
-    conn = get_db()
-    conn.execute(
-        "INSERT INTO upload_history (user_id, filename, rows, columns) VALUES (?,?,?,?)",
-        (user_id, filename, rows, columns)
-    )
-    conn.commit()
-    conn.close()
+    """Add upload history with error handling for foreign key issues."""
+    try:
+        conn = get_db()
+        # Verify user exists before inserting
+        user_check = conn.execute("SELECT id FROM users WHERE id=?", (user_id,)).fetchone()
+        if not user_check:
+            print(f"[WARNING] User {user_id} not found, skipping upload history")
+            conn.close()
+            return
+        
+        conn.execute(
+            "INSERT INTO upload_history (user_id, filename, rows, columns) VALUES (?,?,?,?)",
+            (user_id, filename, rows, columns)
+        )
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"[ERROR] Failed to add upload history: {e}")
+        # Don't crash - continue anyway
 
 
 def get_upload_history(user_id):
